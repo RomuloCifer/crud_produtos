@@ -1,0 +1,14 @@
+#Banco de dados
+produtos.db
+
+#Cache do python
+__pycache__/
+*.pyc
+
+#amb virtual
+venv/
+.env/
+
+#arquivos temporarios
+*.log
+*.tmp
