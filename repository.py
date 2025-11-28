@@ -16,3 +16,22 @@ def inserir_produto(nome:str, preco:float, quantidade:int) -> None:
     conn.commit()
 
     conn.close()
+
+def listar_produtos():
+    """Lista todos os produtos da db"""
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+            SELECT id, nome, preco, quantidade
+            FROM produtos
+            ORDER BY id"""
+    
+    cursor.execute(sql)
+
+    produtos = cursor.fetchall()
+
+    conn.close()
+
+    return produtos
