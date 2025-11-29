@@ -46,5 +46,19 @@ def atualizar_produto(produto_id: int, nome:str, preco:float, quantidade:int):
     conn.commit()
     linhas_afetadas = cursor.rowcount # quantas linhas foram alteradas
     conn.close()
-
     return linhas_afetadas > 0
+
+def deletar_produto(produto_id:int):
+    """Deleta um produto de acordo com o ID fornecido"""
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    sql = """
+        DELETE FROM produtos
+        WHERE id = ?
+        """
+    cursor.execute(sql, (produto_id,))
+    conn.commit()
+    linhas_removidas = cursor.rowcount
+    conn.close()
+    return linhas_removidas > 0

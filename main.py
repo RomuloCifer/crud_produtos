@@ -1,5 +1,5 @@
 from database import create_table
-from repository import inserir_produto, listar_produtos, atualizar_produto
+from repository import inserir_produto, listar_produtos, atualizar_produto, deletar_produto
 
 
 def cadastrar_produto():
@@ -37,6 +37,21 @@ def atualizar_produtos():
         print("Item atualizado com sucesso!")
     else:
         print("Nenhum produto atualizado, cheque o ID")
+def deletar_produtos_flow():
+    print("\n=== Excluir produto ===")
+    mostrar_produtos()
+
+    id_str = input("Digite o ID do produto que deseja deletar.")
+    id_int = int(id_str)
+    confirmacao = input(f"Tem certeza que deseja deletar o produto ID {id_int}? s/n")
+    if confirmacao.lower() != "s":
+        print("Operação cancelada..")
+        return
+    sucesso = deletar_produto(id_int)
+    if sucesso:
+        print("Produto deletado com sucesso")
+    else:
+        print("Nenhum item deletado, verifique o ID.")
 
 def mostrar_menu():
     """Exibe o menu principal"""
@@ -44,6 +59,7 @@ def mostrar_menu():
     print("1 - Cadastrar produto")
     print("2 - Listar produtos")
     print("3 - Atualizar produto")
+    print("4 - Deletar produto")
     print("0 - Sair")
 
 def main():
@@ -60,6 +76,8 @@ def main():
             mostrar_produtos()
         elif opcao == "3":
             atualizar_produtos()
+        elif opcao == "4":
+            deletar_produtos_flow()
         elif opcao == "0":
             print("Saindo do sistema...")
             break
