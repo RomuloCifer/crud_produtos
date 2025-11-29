@@ -66,23 +66,30 @@ def main():
     create_table()
     print('=' * 5, "SISTEMA DE PRODUTOS", '=' * 5)
 
+acoes = {
+    "1": cadastrar_produto,
+    "2": mostrar_produtos,
+    "3": atualizar_produto,
+    "4": deletar_produtos_flow,
+    "0": None
+}
+
+
     #algo simples para começar pegando os inputs
-    while True:
-        mostrar_menu()
-        opcao = input("Digite uma operação -> ")
-        if opcao == "1":
-            cadastrar_produto()
-        elif opcao == "2":
-            mostrar_produtos()
-        elif opcao == "3":
-            atualizar_produtos()
-        elif opcao == "4":
-            deletar_produtos_flow()
-        elif opcao == "0":
-            print("Saindo do sistema...")
-            break
-        else:
-            print("Opção inválida. Tente novamente.")
+while True:
+    mostrar_menu()
+    opcao_user = input("Digite uma opção -> ")
+    acao = acoes.get(opcao_user)
+
+    if acao is None and opcao_user == "0":
+        print("Saindo do sistema...")
+        break
+
+    elif acao is None:
+        print("Opção inválida.")
+    
+    else:
+        acao()
 
 if __name__ == "__main__":
     print(main())
