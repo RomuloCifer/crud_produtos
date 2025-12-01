@@ -11,7 +11,7 @@ class Logger():
         """Registra uma mensagem de log com timestamp."""
         agora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_message = f"[{agora}] [{tipo}] {mensagem}\n"
-        with self.log_file.open("a") as file:
+        with self.log_file.open("a", encoding="utf-8") as file:
             file.write(log_message)
 
     def info(self, mensagem: str):
@@ -28,4 +28,4 @@ class Logger():
     
     def delete(self, mensagem: str):
         self.log("DELETE", mensagem)
-        
+
