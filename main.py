@@ -1,6 +1,7 @@
 from database import create_table
 from repository import inserir_produto, listar_produtos, atualizar_produto, deletar_produto
 from logger import Logger
+from produto import Produto
 
 logger = Logger('produtos.log')
 
@@ -34,9 +35,12 @@ def cadastrar_produto():
     preco = ler_float("Digite o preço do produto: ")
     qtd = ler_int("Digite a quantidade do produto: ")
 
-    inserir_produto(nome, preco, qtd)
-    print("\n",nome, "cadastrado com sucesso")
-    logger.create(f"Produto criado: nome={nome}, preco={preco}, quantidade={qtd}")
+    novo_produto = Produto(id=None, nome=nome, preco=preco, quantidade=qtd)
+    produto_salvo = inserir_produto(novo_produto)
+    print(f"\n{produto_salvo.nome} cadastrado com sucesso (ID {produto_salvo.id}).")
+    logger.create(
+        f"Produto criado: id={produto_salvo.id}, nome='{produto_salvo.nome}', preco={produto_salvo.preco}, quantidade={produto_salvo.quantidade}"
+    )
 
 def mostrar_produtos():
     produtos = listar_produtos()
@@ -44,25 +48,41 @@ def mostrar_produtos():
         print("Lista de produtos vazia.")
     else:
         for prod in produtos:
-            prod_id, prod_nome, prod_preco, prod_qtd = prod
-            print(f"ID:{prod_id} -> nome : {prod_nome} | preço : {prod_preco:.2f} | Quantidade : {prod_qtd}")
+            print(
+                f"ID: {prod.id} -> Nome: {prod.nome} | "
+                f"Preço: R$ {prod.preco:.2f} | Quantidade: {prod.quantidade}"
+            )
 
 def atualizar_produtos():
+    print("\n=== Atualizar produto ===")
     mostrar_produtos()
 
-    produto_id = ler_int("ID: ")
-    print("Digite os novos dados. \n")
-    novo_nome = input("Nome: ")
-    preco = ler_float("Preço: ")
-    quantidade = ler_int("Quantidade: ")
+    produto_id = int(input("\nQual ID do produto que deseja alterar? "))
 
-    sucesso = atualizar_produto(produto_id, novo_nome, preco, quantidade)
+    print("\nDigite os novos dados.\n")
+    novo_nome = input("Nome: ")
+    preco_str = input("Preço: ")
+    preco_float = float(preco_str)
+    quantidade_str = input("Quantidade: ")
+    qtd_int = int(quantidade_str)
+
+    produto_atualizado = Produto(
+        id=produto_id,
+        nome=novo_nome,
+        preco=preco_float,
+        quantidade=qtd_int,
+    )
+
+    sucesso = atualizar_produto(produto_atualizado)
+
     if sucesso:
         print("Item atualizado com sucesso!")
-        logger.update(f"Produto ID={produto_id} atualizado para: nome={novo_nome}, preco={preco}, quantidade={quantidade}")
+        logger.update(
+            f"Produto atualizado: id={produto_atualizado.id}, nome='{produto_atualizado.nome}', preco={produto_atualizado.preco}, quantidade={produto_atualizado.quantidade}"
+        )
     else:
-        print("Nenhum produto atualizado, cheque o ID")
-        logger.error(f"Tentativa de atualizar produto falhou ID={produto_id}")
+        print("Nenhum produto atualizado, verifique o ID.")
+        logger.error(f"Tentativa de atualizar produto inexistente: ID={produto_id}")
 
 def deletar_produtos_flow():
     print("\n=== Excluir produto ===")
@@ -97,7 +117,7 @@ def main():
     acoes = {
         "1": cadastrar_produto,
         "2": mostrar_produtos,
-        "3": atualizar_produto,
+        "3": atualizar_produtos,
         "4": deletar_produtos_flow,
         "0": None
     }
