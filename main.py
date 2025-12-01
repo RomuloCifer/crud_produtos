@@ -1,5 +1,8 @@
 from database import create_table
 from repository import inserir_produto, listar_produtos, atualizar_produto, deletar_produto
+from logger import Logger
+
+logger = Logger('produtos.log')
 
 def ler_float(mensagem: str) -> float:
     """Lê um número float do usuário, tratando erros de entrada"""
@@ -33,6 +36,7 @@ def cadastrar_produto():
 
     inserir_produto(nome, preco, qtd)
     print("\n",nome, "cadastrado com sucesso")
+    logger.create(f"Produto criado: nome={nome}, preco={preco}, quantidade={qtd}")
 
 def mostrar_produtos():
     produtos = listar_produtos()
@@ -55,8 +59,10 @@ def atualizar_produtos():
     sucesso = atualizar_produto(produto_id, novo_nome, preco, quantidade)
     if sucesso:
         print("Item atualizado com sucesso!")
+        logger.update(f"Produto ID={produto_id} atualizado para: nome={novo_nome}, preco={preco}, quantidade={quantidade}")
     else:
         print("Nenhum produto atualizado, cheque o ID")
+        logger.error(f"Tentativa de atualizar produto falhou ID={produto_id}")
 
 def deletar_produtos_flow():
     print("\n=== Excluir produto ===")
@@ -70,8 +76,10 @@ def deletar_produtos_flow():
     sucesso = deletar_produto(produto_id)
     if sucesso:
         print("Produto deletado com sucesso")
+        logger.delete(f"Produto deletado ID={produto_id}")
     else:
         print("Nenhum item deletado, verifique o ID.")
+        logger.error(f"Tentativa de deletar produto falhou ID={produto_id}")
 
 def mostrar_menu():
     """Exibe o menu principal"""
@@ -86,31 +94,31 @@ def main():
     create_table()
     print('=' * 5, "SISTEMA DE PRODUTOS", '=' * 5)
 
-acoes = {
-    "1": cadastrar_produto,
-    "2": mostrar_produtos,
-    "3": atualizar_produto,
-    "4": deletar_produtos_flow,
-    "0": None
-}
+    acoes = {
+        "1": cadastrar_produto,
+        "2": mostrar_produtos,
+        "3": atualizar_produto,
+        "4": deletar_produtos_flow,
+        "0": None
+    }
 
 
-    #algo simples para começar pegando os inputs
-while True:
-    mostrar_menu()
-    opcao_user = input("Digite uma opção -> ")
-    acao = acoes.get(opcao_user)
+        #algo simples para começar pegando os inputs
+    while True:
+        mostrar_menu()
+        opcao_user = input("Digite uma opção -> ")
+        acao = acoes.get(opcao_user)
 
-    if acao is None and opcao_user == "0":
-        print("Saindo do sistema...")
-        break
+        if acao is None and opcao_user == "0":
+            print("Saindo do sistema...")
+            break
 
-    elif acao is None:
-        print("Opção inválida.")
-    
-    else:
-        acao()
+        elif acao is None:
+            print("Opção inválida.")
+        
+        else:
+            acao()
 
 if __name__ == "__main__":
-    print(main())
+    main()
     
