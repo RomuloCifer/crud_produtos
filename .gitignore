@@ -12,3 +12,6 @@ venv/
 #arquivos temporarios
 *.log
 *.tmp
+
+#testes
+test_produtos.py
